@@ -77,6 +77,7 @@ MainWindow::MainWindow(ConfigManager *cfManager, QWidget *parent)
 
     /** TODO: TabBar->setMovable(true);
         If move, index will change. So I must adjust `tabData`.
+        [hencejacki@gmail.com]Consider implementing by linked list
     */
 
     TabBar->setTabsClosable(true);
@@ -90,7 +91,7 @@ MainWindow::MainWindow(ConfigManager *cfManager, QWidget *parent)
     this->setCentralWidget(plainTextEdit);
 
     TabBar->addTab("Untitled.txt");
-    tabData.push_back(TabData{"", "", 0});
+    tabData.push_back(TabData{"", "", false});
 
     connect(TabBar, &QTabBar::currentChanged, [&](const int index) {
         prevTabIndex = curTabIndex;
@@ -105,10 +106,10 @@ MainWindow::MainWindow(ConfigManager *cfManager, QWidget *parent)
             TabBar->addTab("Untitled.txt");
         }
 
-        if (lastTabRemoveFlag == true) {
+        if (lastTabRemoveFlag) {
             prevTabIndex = curTabIndex = index;
             lastTabRemoveFlag = false;
-        } else if (doNotSaveDataFlag == true) {
+        } else if (doNotSaveDataFlag) {
             doNotSaveDataFlag = false;
         } else {
             saveTabData(prevTabIndex);

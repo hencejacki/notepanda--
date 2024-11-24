@@ -20,27 +20,33 @@
 
 #include "./core/configmanager.h"
 #include "./ui/mainwindow.h"
+#include "version.h"
 
 int main(int argc, char *argv[])
 {
     QApplication App(argc, argv);
 
-    App.setOrganizationName("ChungZH");
-    App.setApplicationName("Notepanda");
-    App.setApplicationVersion("0.1.4");
+    App.setOrganizationName(ORGANIZATION_NAME);
+    App.setApplicationName(APPLICATION_NAME);
+    App.setApplicationVersion(APPLICATION_VERSION);
 
+    /* Parse command line, such as -h, -v*/
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("source", "The source file to open.");
+    /*name, description, default*/
     QCommandLineOption configFileOption("c", "specify configuration file.",
                                         "config.json");
+    /*Add extra options*/
     parser.addOption(configFileOption);
+    /*Equivalent to QCommandLineParser::process(app.arguments());*/
     parser.process(App);
 
+    /*Get the value of options*/
     QString configFile = parser.value(configFileOption);
     if (configFile.isEmpty()) {
-#ifdef Q_OS_WIN
+#ifdef Q_OS_WIN // Windows
 
         /*
         if (QLocale::system().country() == QLocale::China ||
@@ -56,7 +62,7 @@ int main(int argc, char *argv[])
                 QStandardPaths::StandardLocation::AppConfigLocation);
             configFile = configDir.absolutePath() + "/config.json";
         }
-#else
+#else   // Linux
         QDir configDir = QDir::homePath() + "/.config/notepanda";
         configFile = configDir.absolutePath() + "/config.json";
         if (!configDir.exists()) {
@@ -66,13 +72,18 @@ int main(int argc, char *argv[])
     }
     qDebug() << configFile;
 
+    /*TODO: singleton for ConfigManager*/
     ConfigManager *configManager;
     configManager = new ConfigManager(configFile);
 
+    /*Set style with QT default themes*/
     App.setStyle(QStyleFactory::create(configManager->getStyleTheme()));
 
+    /*Create Main windows*/
     MainWindow notepanda(configManager);
     notepanda.show();
+
+    /*Open file if source file is given*/
     if (parser.positionalArguments().size() == 1)
         notepanda.plainTextEdit->openFile(parser.positionalArguments().at(0));
 

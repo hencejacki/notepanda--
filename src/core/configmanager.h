@@ -48,14 +48,14 @@ class ConfigManager : public QObject
     void setEditorIndentMode(const QString &indentmode);
 
    private:
-    QSettings *settings;
-    QString configFile;
-    QString editorFontFamily;
-    QString styleTheme;
-    int editorFontSize;
-    QString editorColorTheme;
-    int editorTabSize;
-    QString editorIndentMode;
+    QSettings *settings_;
+    QString configFile_;
+    QString editorFontFamily_;
+    QString styleTheme_;
+    int editorFontSize_;
+    QString editorColorTheme_;
+    int editorTabSize_;
+    QString editorIndentMode_;
 };
 
 #endif  // CONFIGMANAGER_H

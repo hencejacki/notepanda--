@@ -388,17 +388,17 @@ void TextEditor::keyPressEvent(QKeyEvent *e)
             e->accept();
         }
     } else if (e->key() == '(') {
-        this->insertPlainText("()");
+        this->insertPlainText(")");
         this->moveCursor(QTextCursor::MoveOperation::Left,
                          QTextCursor::MoveAnchor);
         e->accept();
     } else if (e->key() == '{') {
-        this->insertPlainText("{}");
+        this->insertPlainText("}");
         this->moveCursor(QTextCursor::MoveOperation::Left,
                          QTextCursor::MoveAnchor);
         e->accept();
     } else if (e->key() == '[') {
-        this->insertPlainText("[]");
+        this->insertPlainText("]");
         this->moveCursor(QTextCursor::MoveOperation::Left,
                          QTextCursor::MoveAnchor);
         e->accept();

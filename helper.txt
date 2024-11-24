@@ -1,0 +1,64 @@
+Perquisite:
+1. [perl, extra-cmake-modules would use](https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_54001_64bit_UCRT/strawberry-perl-5.40.0.1-64bit.msi)
+2. [ninja](https://github.com/ninja-build/ninja/releases)
+3. [MSVC tool chain, match against with msvc-QT-version](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2017)
+4. [Mingw tool chain, match against with mingw-QT-version](https://sourceforge.net/projects/mingw/)
+
+Note:
+1. [MSVC tool usage](https://learn.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-170)
+
+Build steps on windows:
+1. Build extra-cmake-modules
+mkdir build && cd build
+cmake .. 
+    -GNinja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_HTML_DOCS=OFF \
+    -DBUILD_MAN_DOCS=OFF \
+    -DBUILD_QTHELP_DOCS=OFF \
+    -DBUILD_TESTING=OFF \
+    -DCMAKE_INSTALL_PREFIX="D:\Program Files\CMake\share\cmake-3.28\Modules"
+cmake --build . --target install
+2. Build syntax-highlighting
+mkdir build && cd build
+"your/path/to/vcvar{xx}.bat"    // Active msvc compiler environment.
+cmake ..
+    -GNinja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_HTML_DOCS=OFF \
+    -DBUILD_MAN_DOCS=OFF \
+    -DBUILD_QTHELP_DOCS=OFF \
+    -DBUILD_TESTING=OFF \
+    -DCMAKE_INSTALL_PREFIX="D:\Program Files\CMake\share\cmake-3.28\Modules" \
+    -DECM_DIR="D:\Program Files\CMake\share\cmake-3.28\Modules\share\ECM\cmake" \
+    -DCMAKE_PREFIX_PATH="D:\Qt\Qt5.12.0\5.12.0\msvc2017_64"
+cmake --build . --target install
+3. Build nodepanda
+mkdir build && cd build
+"your/path/to/vcvar{xx}.bat"    // Active msvc compiler environment.
+cmake .. 
+    -GNinja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=Release \
+    -DKF5SyntaxHighlighting_DIR="your/path/to/cmake/KF5SyntaxHighlighting"
+4. Copy KF5SyntaxHighlighting.dll to local directory.
+5. Double click to run.
+
+Project structure:
+nodepanda
+|-assets: Resource files.
+|-images: Resource images.
+|-makespec: Information of software version.
+|-src: Source code.
+|--3rdparty: Dependencies.
+|---extra-cmake-modules: Provide extra functionality for cmake
+|---syntax-highlighting: Tool chain for syntax highlighting used by `Kate` developed by `KDE`.
+|--core
+|---texteditor.*: Core for implementing undo, redo, save, line number show, etc.
+|---configmanager.*
+|--ui
+|---mainwindows.*
+|---linenumberarea.h
+|---aboutwindows.*
+|---preferenceswindows.*
+|-main.cpp
